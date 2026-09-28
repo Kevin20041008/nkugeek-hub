@@ -239,30 +239,6 @@ export const researchItems = [
   },
 ];
 
-export const papers = [
-  {
-    title: "Segment Anything",
-    venue: "ICCV 2023",
-    status: "准备共读",
-    focus: "视觉基础模型与数据引擎",
-    owner: "CV 与多模态组",
-  },
-  {
-    title: "Attention Is All You Need",
-    venue: "NeurIPS 2017",
-    status: "复现模板",
-    focus: "Transformer 基础结构",
-    owner: "AI 与大模型组",
-  },
-  {
-    title: "DQN",
-    venue: "Nature 2015",
-    status: "实验记录中",
-    focus: "强化学习基线复现",
-    owner: "强化学习小组",
-  },
-];
-
 export const events = [
   {
     type: "启动活动",

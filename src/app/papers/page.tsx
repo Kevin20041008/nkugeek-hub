@@ -1,181 +1,43 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import {
-  ArrowRight,
-  BookOpen,
-  Database,
-  FileText,
-  FlaskConical,
-  GitCompareArrows,
-} from "lucide-react";
-
-import { PageHero } from "@/components/layout/page-hero";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { ArrowRight, BookOpen, GitPullRequest } from "lucide-react";
+import { PaperCatalog } from "@/components/papers/paper-catalog";
+import { paperCatalogReviewedAt, paperDomains, paperReadingPaths, paperRepository } from "@/data/papers";
 import { getPaperReproductionCards } from "@/services/reproductions";
 
 export const metadata: Metadata = {
-  title: "论文复现",
+  title: "论文共读与复现",
+  description: "60 篇 NLP、计算机视觉、多模态、具身智能与强化学习论文，附原文、作者资源、分级阅读路线与复现计划。",
 };
-
-const reproductionFields = [
-  "论文信息",
-  "数据集",
-  "实验环境",
-  "原论文指标",
-  "当前复现指标",
-  "实验日志",
-  "问题记录",
-  "复现报告",
-];
-
-const workflow = [
-  {
-    icon: FileText,
-    text: "登记论文条目，补齐 PDF、代码仓库、阅读状态和分享会时间。",
-  },
-  {
-    icon: Database,
-    text: "建立数据集、环境配置和指标表，避免复现实验只停留在笔记里。",
-  },
-  {
-    icon: GitCompareArrows,
-    text: "把每次实验、阻塞问题和报告沉淀成可审阅的复现流水线。",
-  },
-];
 
 export default async function PapersPage() {
   const papers = await getPaperReproductionCards();
-  const activeCount = papers.filter((paper) =>
-    ["复现中", "实验中", "日志中"].includes(paper.status)
-  ).length;
-
   return (
-    <main>
-      <PageHero
-        eyebrow="PAPER REPRODUCTION"
-        title="论文共读与复现流水线"
-        description="每篇论文都可以形成独立复现空间，持续记录数据集、环境、指标、实验日志、问题和复现报告。"
-        actions={
-          <Button className="bg-[#7a1731] text-white hover:bg-[#641228]">
-            <BookOpen className="mr-2 h-4 w-4" />
-            发起共读
-          </Button>
-        }
-      />
-
-      <section className="mx-auto grid max-w-7xl gap-6 px-5 py-12 lg:grid-cols-[1fr_0.9fr] lg:px-8">
-        <div className="grid gap-5">
-          <div className="grid gap-3 sm:grid-cols-3">
-            <Summary label="论文空间" value={papers.length.toString()} />
-            <Summary label="复现进行中" value={activeCount.toString()} />
-            <Summary
-              label="实验记录"
-              value={papers.reduce((sum, paper) => sum + paper.experimentCount, 0).toString()}
-            />
+    <main className="bg-white">
+      <header className="border-b border-zinc-200 bg-zinc-50">
+        <div className="mx-auto max-w-7xl px-5 py-9 lg:px-8">
+          <p className="text-xs font-medium text-[#28705b]">NKUGeek Research</p>
+          <div className="mt-3 flex flex-wrap items-center justify-between gap-5">
+            <h1 className="text-3xl font-semibold">论文共读与复现</h1>
+            <a href={paperRepository + "/issues/new?title=" + encodeURIComponent("[论文推荐] ")} target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 text-sm font-medium text-[#7a1731]"><GitPullRequest className="h-4 w-4" />推荐论文</a>
           </div>
-
-          {papers.map((paper) => (
-            <Card
-              key={paper.slug}
-              className="group border-zinc-200 bg-white text-zinc-950 shadow-sm transition hover:border-[#7a1731]/30"
-            >
-              <CardHeader>
-                <div className="flex flex-wrap items-center gap-2">
-                  <Badge variant="secondary" className="bg-[#f2efe8] text-[#7a1731]">
-                    {paper.venue}
-                  </Badge>
-                  <Badge variant="secondary" className="bg-[#eef7f4] text-[#245f51]">
-                    {paper.status}
-                  </Badge>
-                </div>
-                <CardTitle className="pt-3 text-xl">{paper.title}</CardTitle>
-                <CardDescription className="leading-7 text-zinc-600">
-                  {paper.focus}
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="grid gap-3 text-sm text-zinc-600 sm:grid-cols-2">
-                  <span>作者：{paper.authors}</span>
-                  <span>负责人：{paper.owner}</span>
-                  <span>实验记录：{paper.experimentCount}</span>
-                  <span>指标：{paper.metricSummary}</span>
-                </div>
-                <Button
-                  variant="ghost"
-                  className="mt-5 w-full justify-between text-zinc-700 hover:bg-[#fff6f0] hover:text-[#7a1731]"
-                  asChild
-                >
-                  <Link href={`/papers/${paper.slug}`}>
-                    查看复现空间
-                    <ArrowRight className="h-4 w-4 transition group-hover:translate-x-1" />
-                  </Link>
-                </Button>
-              </CardContent>
-            </Card>
-          ))}
+          <p className="mt-4 max-w-3xl text-sm leading-7 text-zinc-600">从基础方法到跨领域研究。{papers.length} 篇精选原文，5 个研究方向；先确定可验证的实验范围，再积累代码、日志与复现报告。</p>
+          <p className="mt-3 text-xs leading-6 text-zinc-500">{Math.min(...papers.map((paper) => paper.year))}–{Math.max(...papers.map((paper) => paper.year))} · 年份按首次预印本 · 收录不代表已复现 · 校订 {paperCatalogReviewedAt}</p>
         </div>
-
-        <div className="grid gap-5">
-          <Card className="border-zinc-200 bg-white text-zinc-950 shadow-sm">
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <FlaskConical className="h-5 w-5 text-[#7a1731]" />
-                论文复现空间
-              </CardTitle>
-              <CardDescription className="leading-7 text-zinc-600">
-                复现不是单次提交，而是一条从论文、数据、环境到报告的可追踪链路。
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="grid gap-2 sm:grid-cols-2">
-                {reproductionFields.map((field) => (
-                  <div
-                    key={field}
-                    className="rounded-lg border border-zinc-200 bg-[#fbfbfd] p-3 text-sm text-zinc-700"
-                  >
-                    {field}
-                  </div>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card className="border-zinc-200 bg-white text-zinc-950 shadow-sm">
-            <CardHeader>
-              <CardTitle>复现流程</CardTitle>
-            </CardHeader>
-            <CardContent className="grid gap-3 text-sm text-zinc-600">
-              {workflow.map((item) => {
-                const Icon = item.icon;
-
-                return (
-                  <div key={item.text} className="flex items-start gap-3">
-                    <Icon className="mt-0.5 h-4 w-4 shrink-0 text-[#7a1731]" />
-                    <span>{item.text}</span>
-                  </div>
-                );
-              })}
-            </CardContent>
-          </Card>
+      </header>
+      <section className="mx-auto max-w-7xl px-5 py-8 lg:px-8"><PaperCatalog papers={papers} /></section>
+      <section className="border-y border-zinc-200 bg-zinc-50">
+        <div className="mx-auto max-w-7xl px-5 py-8 lg:px-8">
+          <h2 className="flex items-center gap-2 text-xl font-semibold"><BookOpen className="h-5 w-5 text-[#28705b]" />分方向阅读路线</h2>
+          <div className="mt-5 divide-y divide-zinc-200">{paperReadingPaths.map((path) => (
+            <div key={path.domain} className="grid gap-3 py-4 md:grid-cols-[190px_minmax(0,1fr)]"><h3 className="text-sm font-medium">{paperDomains[path.domain]}</h3><ol className="flex flex-wrap items-center gap-x-3 gap-y-2 text-sm">{path.slugs.map((slug, index) => <li key={slug} className="flex items-center gap-3"><Link href={"/papers/" + slug} className="text-[#7a1731] hover:underline">{papers.find((paper) => paper.slug === slug)!.name}</Link>{index < path.slugs.length - 1 ? <ArrowRight aria-hidden="true" className="h-3 w-3 text-zinc-400" /> : null}</li>)}</ol></div>
+          ))}</div>
         </div>
       </section>
+      <section className="mx-auto grid max-w-7xl gap-8 px-5 py-8 text-sm leading-7 text-zinc-600 md:grid-cols-2 lg:px-8">
+        <div><h2 className="font-semibold text-zinc-900">来源与收录原则</h2><p className="mt-2">参考 <a className="text-[#7a1731] underline underline-offset-4" href="https://spinningup.openai.com/en/latest/spinningup/keypapers.html" target="_blank" rel="noreferrer">Spinning Up · Key Papers in Deep RL</a> 的按主题组织方式，并扩展到语言、视觉、多模态与机器人。每篇均链接 arXiv 原文；清单不是全领域综述或排名。</p></div>
+        <div><h2 className="font-semibold text-zinc-900">复现范围与证据</h2><p className="mt-2">难度、实践方式与实验目标是社区编辑建议，尚未逐篇实测。缩小训练、评估公开权重和复现原文全量结果需分别说明。没有可核验日志的项目，不填写成绩、负责人或完成状态。</p></div>
+      </section>
     </main>
-  );
-}
-
-function Summary({ label, value }: { label: string; value: string }) {
-  return (
-    <div className="rounded-lg border border-zinc-200 bg-white p-4 shadow-sm">
-      <p className="text-2xl font-semibold text-zinc-950">{value}</p>
-      <p className="mt-1 text-sm text-zinc-600">{label}</p>
-    </div>
   );
 }

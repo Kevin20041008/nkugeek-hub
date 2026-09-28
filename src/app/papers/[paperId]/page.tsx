@@ -1,368 +1,74 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import {
-  ArrowLeft,
-  BookOpen,
-  Bug,
-  Database,
-  FileText,
-  FlaskConical,
-  GitBranch,
-  LineChart,
-  TerminalSquare,
-} from "lucide-react";
+import { notFound } from "next/navigation";
+import { ArrowLeft, ArrowRight, BookOpen, ExternalLink, FileText, FlaskConical, GitPullRequest } from "lucide-react";
+import { paperCatalog, paperCatalogReviewedAt, paperDomains, paperPdfUrl, paperProposalUrl, paperRepository, paperUrl } from "@/data/papers";
+import { getPaperReproductionDetail, getStaticPaperSlugs } from "@/services/reproductions";
 
-import { EmptyState } from "@/components/empty-state";
-import { PageHero } from "@/components/layout/page-hero";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import {
-  getPaperReproductionDetail,
-  getStaticPaperSlugs,
-  type MetricEntry,
-} from "@/services/reproductions";
-
-export const metadata: Metadata = {
-  title: "论文复现空间",
-};
-
-const pipelineSteps = [
-  "论文信息",
-  "数据集",
-  "实验环境",
-  "指标对齐",
-  "问题记录",
-  "复现报告",
-];
-
-export function generateStaticParams() {
-  return getStaticPaperSlugs().map((paperId) => ({ paperId }));
-}
-
-export default async function PaperReproductionPage({
-  params,
-}: {
-  params: Promise<{ paperId: string }>;
-}) {
+type Props = { params: Promise<{ paperId: string }> };
+export const dynamicParams = false;
+export function generateStaticParams() { return getStaticPaperSlugs().map((paperId) => ({ paperId })); }
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { paperId } = await params;
   const paper = await getPaperReproductionDetail(paperId);
+  return { title: paper ? paper.name + " · 论文复现" : "论文不存在", description: paper?.summary };
+}
 
+export default async function PaperReproductionPage({ params }: Props) {
+  const { paperId } = await params;
+  const paper = await getPaperReproductionDetail(paperId);
+  if (!paper) notFound();
+  const related = paperCatalog.filter((item) => item.domain === paper.domain && item.slug !== paper.slug).slice(0, 4);
+  const existingIssues = paperRepository + "/issues?q=" + encodeURIComponent("is:issue \"" + paper.name + "\"");
   return (
-    <main>
-      <PageHero
-        eyebrow="REPRODUCTION PIPELINE"
-        title={`${paper.title} 复现空间`}
-        description={paper.focus}
-        actions={
-          <>
-            <Button className="bg-[#7a1731] text-white hover:bg-[#641228]" asChild>
-              <Link href="/papers">
-                <ArrowLeft className="mr-2 h-4 w-4" />
-                返回论文列表
-              </Link>
-            </Button>
-            {paper.codeUrl ? (
-              <Button
-                variant="outline"
-                className="border-zinc-300 bg-white text-zinc-900 hover:bg-zinc-50"
-                asChild
-              >
-                <a href={paper.codeUrl} target="_blank" rel="noreferrer">
-                  <GitBranch className="mr-2 h-4 w-4" />
-                  代码仓库
-                </a>
-              </Button>
-            ) : null}
-          </>
-        }
-      />
-
-      <section className="mx-auto grid max-w-7xl gap-6 px-5 py-12 lg:px-8">
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          <InfoCard label="会议/期刊" value={paper.venue} />
-          <InfoCard label="状态" value={paper.status} />
-          <InfoCard label="负责人" value={paper.owner} />
-          <InfoCard label="分享时间" value={paper.shareAt} />
+    <main className="bg-white">
+      <div className="mx-auto max-w-7xl px-5 py-6 lg:px-8"><Link href="/papers" className="inline-flex items-center gap-2 text-sm text-zinc-500 hover:text-[#7a1731]"><ArrowLeft className="h-4 w-4" />返回论文目录</Link></div>
+      <div className="mx-auto grid max-w-7xl gap-10 px-5 pb-12 lg:grid-cols-[minmax(0,1fr)_280px] lg:px-8">
+        <div className="min-w-0">
+          <header className="border-b border-zinc-200 pb-7">
+            <p className="text-xs font-medium text-[#28705b]">{paperDomains[paper.domain]} · {paper.year} · {paper.name}</p>
+            <h1 className="mt-4 break-words text-2xl font-semibold leading-snug sm:text-3xl">{paper.title}</h1>
+            <p className="mt-4 text-sm leading-7 text-zinc-500">{paper.authors}</p>
+            <p className="mt-4 leading-8 text-zinc-700">{paper.summary}</p>
+            <div className="mt-4 flex flex-wrap gap-x-4 gap-y-2 text-xs text-zinc-500">{paper.tags.map((tag) => <span key={tag}>{tag}</span>)}</div>
+            <div className="mt-5 flex flex-wrap gap-5 text-sm text-[#7a1731] lg:hidden"><a href={paperUrl(paper)} target="_blank" rel="noreferrer" className="inline-flex items-center gap-2"><ExternalLink className="h-4 w-4" />阅读原文</a><a href={paperPdfUrl(paper)} target="_blank" rel="noreferrer" className="inline-flex items-center gap-2"><FileText className="h-4 w-4" />打开 PDF</a></div>
+          </header>
+          <section className="border-b border-zinc-200 py-7" aria-labelledby="goal-heading">
+            <h2 id="goal-heading" className="flex items-center gap-2 text-xl font-semibold"><FlaskConical className="h-5 w-5 text-[#7a1731]" />复现空间 · 建议计划</h2>
+            <p className="mt-3 text-xs leading-6 text-zinc-500">{paper.difficulty} · {paper.mode} · 编辑建议，尚未实测</p>
+            <h3 className="mt-5 text-sm font-semibold">最小实验目标</h3><p className="mt-2 text-sm leading-7 text-zinc-700">{paper.goal}</p>
+            <h3 className="mt-5 text-sm font-semibold">数据集 / 环境</h3><p className="mt-2 text-sm leading-7 text-zinc-700">{paper.dataset}</p>
+            <h3 className="mt-5 text-sm font-semibold">评估项</h3><ul className="mt-2 list-disc space-y-1 pl-5 text-sm leading-7 text-zinc-700">{paper.metrics.map((metric) => <li key={metric}>{metric}</li>)}</ul>
+            <div className="mt-6 border-l-2 border-amber-500 pl-4"><h3 className="text-sm font-semibold">边界与常见偏差</h3><p className="mt-2 text-sm leading-7 text-zinc-600">{paper.caution}</p></div>
+          </section>
+          <section className="border-b border-zinc-200 py-7" aria-labelledby="protocol-heading">
+            <h2 id="protocol-heading" className="text-xl font-semibold">实验验收协议</h2>
+            <ol className="mt-5 list-decimal space-y-3 pl-5 text-sm leading-7 text-zinc-600">
+              <li>阅读原文，选定要对齐的具体表格、模型变体与数据划分；把缩小规模或替换组件单独列出。</li>
+              <li>核对作者资源的许可与依赖，锁定代码 commit、权重版本、硬件、随机种子和完整运行命令。</li>
+              <li>先完成数据与推理检查，再执行约定的实验；记录多次运行结果、资源消耗和失败案例。</li>
+              <li>提交可核验的代码、配置、日志与报告。原论文数值须注明表格和协议，当前指标必须附实际运行证据。</li>
+            </ol>
+          </section>
+          <section className="border-b border-zinc-200 py-7" aria-labelledby="records-heading">
+            <h2 id="records-heading" className="text-xl font-semibold">实验记录</h2>
+            <dl className="mt-5 grid gap-5 sm:grid-cols-2"><div><dt className="text-xs text-zinc-500">原论文对齐目标</dt><dd className="mt-2 text-sm">待认领后选定具体表格与评估条件</dd></div><div><dt className="text-xs text-zinc-500">社区复现指标</dt><dd className="mt-2 text-sm">暂无已验证结果</dd></div></dl>
+            <p className="mt-5 text-sm leading-7 text-zinc-500">暂无实验日志与复现报告。收录此论文不表示社区已完成训练或评估；后续记录通过仓库 Issue 和 Pull Request 补充。</p>
+          </section>
+          <section className="pt-7"><h2 className="flex items-center gap-2 text-xl font-semibold"><BookOpen className="h-5 w-5 text-[#28705b]" />同方向阅读</h2><div className="mt-4 divide-y divide-zinc-100">{related.map((item) => <Link key={item.slug} href={"/papers/" + item.slug} className="flex items-center justify-between gap-3 py-3 text-sm hover:text-[#7a1731]"><span>{item.name} · {item.year}</span><ArrowRight className="h-4 w-4 shrink-0" /></Link>)}</div></section>
         </div>
-
-        <div className="grid gap-6 lg:grid-cols-[1fr_0.9fr]">
-          <Card className="border-zinc-200 bg-white text-zinc-950 shadow-sm">
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <BookOpen className="h-5 w-5 text-[#7a1731]" />
-                论文与复现目标
-              </CardTitle>
-              <CardDescription className="leading-7 text-zinc-600">
-                {paper.authors}
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="grid gap-4">
-              <div className="rounded-lg border border-zinc-200 bg-[#fbfbfd] p-4">
-                <p className="text-sm font-medium text-zinc-950">实验环境</p>
-                <p className="mt-2 text-sm leading-6 text-zinc-600">{paper.environment}</p>
-              </div>
-              <div className="rounded-lg border border-zinc-200 bg-[#fbfbfd] p-4">
-                <p className="text-sm font-medium text-zinc-950">数据集</p>
-                <p className="mt-2 text-sm leading-6 text-zinc-600">{paper.dataset}</p>
-              </div>
-              <div className="flex flex-wrap gap-2">
-                {paper.pdfUrl ? (
-                  <Button variant="outline" className="border-zinc-300 bg-white" asChild>
-                    <a href={paper.pdfUrl} target="_blank" rel="noreferrer">
-                      <FileText className="mr-2 h-4 w-4" />
-                      论文 PDF
-                    </a>
-                  </Button>
-                ) : null}
-                {paper.reportUrl ? (
-                  <Button variant="outline" className="border-zinc-300 bg-white" asChild>
-                    <a href={paper.reportUrl} target="_blank" rel="noreferrer">
-                      <LineChart className="mr-2 h-4 w-4" />
-                      复现报告
-                    </a>
-                  </Button>
-                ) : null}
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card className="border-zinc-200 bg-white text-zinc-950 shadow-sm">
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <FlaskConical className="h-5 w-5 text-[#7a1731]" />
-                流水线进度
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="grid gap-3">
-                {pipelineSteps.map((step, index) => (
-                  <div key={step} className="flex items-center gap-3">
-                    <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-[#f2efe8] text-sm font-semibold text-[#7a1731]">
-                      {index + 1}
-                    </div>
-                    <div className="h-px flex-1 bg-zinc-200" />
-                    <span className="w-24 text-sm font-medium text-zinc-700">{step}</span>
-                  </div>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
-        </div>
-
-        <div className="grid gap-6 lg:grid-cols-2">
-          <MetricPanel
-            title="原论文指标"
-            metrics={paper.originalMetrics}
-            empty="原论文指标待录入。"
-          />
-          <MetricPanel
-            title="当前复现指标"
-            metrics={paper.currentMetrics}
-            empty="当前复现指标待录入。"
-          />
-        </div>
-
-        <div className="grid gap-6 lg:grid-cols-[0.9fr_1.1fr]">
-          <Card className="border-zinc-200 bg-white text-zinc-950 shadow-sm">
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Database className="h-5 w-5 text-[#7a1731]" />
-                数据集
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="grid gap-3">
-              {paper.datasets.length > 0 ? (
-                paper.datasets.map((dataset) => (
-                  <div key={dataset.id} className="rounded-lg border border-zinc-200 bg-[#fbfbfd] p-4">
-                    <div className="flex flex-wrap items-center justify-between gap-3">
-                      <p className="font-medium text-zinc-950">{dataset.name}</p>
-                      <Badge variant="outline" className="border-zinc-300 text-zinc-600">
-                        {dataset.license}
-                      </Badge>
-                    </div>
-                    <p className="mt-2 text-sm text-zinc-500">{dataset.split}</p>
-                    <p className="mt-2 text-sm leading-6 text-zinc-600">{dataset.notes}</p>
-                    {dataset.url ? (
-                      <a
-                        href={dataset.url}
-                        target="_blank"
-                        rel="noreferrer"
-                        className="mt-3 inline-block text-sm font-medium text-[#7a1731] hover:underline"
-                      >
-                        数据集链接
-                      </a>
-                    ) : null}
-                  </div>
-                ))
-              ) : (
-                <EmptyState title="暂无数据集" description="记录数据来源、许可、划分和预处理说明后，这里会形成数据资产目录。" />
-              )}
-            </CardContent>
-          </Card>
-
-          <Card className="border-zinc-200 bg-white text-zinc-950 shadow-sm">
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <TerminalSquare className="h-5 w-5 text-[#7a1731]" />
-                实验日志
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="grid gap-3">
-              {paper.experiments.length > 0 ? (
-                paper.experiments.map((experiment) => (
-                  <div key={experiment.id} className="rounded-lg border border-zinc-200 bg-[#fbfbfd] p-4">
-                    <div className="flex flex-wrap items-center justify-between gap-3">
-                      <p className="font-medium text-zinc-950">{experiment.title}</p>
-                      <Badge variant="secondary" className="bg-[#eef7f4] text-[#245f51]">
-                        {formatStatus(experiment.status)}
-                      </Badge>
-                    </div>
-                    <div className="mt-3 grid gap-2 text-sm text-zinc-600 sm:grid-cols-2">
-                      <span>Seed：{experiment.seed}</span>
-                      <span>时间：{experiment.runAt}</span>
-                      <span>{experiment.baselineMetric}</span>
-                      <span>{experiment.currentMetric}</span>
-                    </div>
-                    <p className="mt-3 text-sm leading-6 text-zinc-600">{experiment.log}</p>
-                  </div>
-                ))
-              ) : (
-                <EmptyState title="暂无实验日志" description="每次训练、推理、评估和失败尝试都可以记录为实验日志。" />
-              )}
-            </CardContent>
-          </Card>
-        </div>
-
-        <div className="grid gap-6 lg:grid-cols-2">
-          <Card className="border-zinc-200 bg-white text-zinc-950 shadow-sm">
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Bug className="h-5 w-5 text-[#7a1731]" />
-                问题记录
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="grid gap-3">
-              {paper.issues.length > 0 ? (
-                paper.issues.map((issue) => (
-                  <div key={issue.id} className="rounded-lg border border-zinc-200 bg-[#fbfbfd] p-4">
-                    <div className="flex flex-wrap items-center justify-between gap-3">
-                      <p className="font-medium text-zinc-950">{issue.title}</p>
-                      <Badge variant="outline" className="border-amber-200 text-amber-800">
-                        {issue.severity} · {issue.status}
-                      </Badge>
-                    </div>
-                    <p className="mt-2 text-sm leading-6 text-zinc-600">{issue.notes}</p>
-                  </div>
-                ))
-              ) : (
-                <EmptyState title="暂无问题记录" description="把环境错误、指标差距和数据异常留下来，方便后续成员接手。" />
-              )}
-            </CardContent>
-          </Card>
-
-          <Card className="border-zinc-200 bg-white text-zinc-950 shadow-sm">
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <FileText className="h-5 w-5 text-[#7a1731]" />
-                复现报告
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="grid gap-3">
-              {paper.reports.length > 0 ? (
-                paper.reports.map((report) => (
-                  <div key={report.id} className="rounded-lg border border-zinc-200 bg-[#fbfbfd] p-4">
-                    <div className="flex flex-wrap items-center justify-between gap-3">
-                      <p className="font-medium text-zinc-950">{report.title}</p>
-                      <Badge variant="secondary" className="bg-[#eef7f4] text-[#245f51]">
-                        {formatStatus(report.status)}
-                      </Badge>
-                    </div>
-                    <p className="mt-2 text-sm leading-6 text-zinc-600">{report.summary}</p>
-                    {report.reportUrl ? (
-                      <a
-                        href={report.reportUrl}
-                        target="_blank"
-                        rel="noreferrer"
-                        className="mt-3 inline-block text-sm font-medium text-[#7a1731] hover:underline"
-                      >
-                        打开报告
-                      </a>
-                    ) : null}
-                  </div>
-                ))
-              ) : (
-                <EmptyState title="暂无复现报告" description="报告可以汇总指标、环境、失败案例和后续计划。" />
-              )}
-            </CardContent>
-          </Card>
-        </div>
-      </section>
+        <aside className="min-w-0 self-start border-t border-zinc-200 pt-6 lg:border-l lg:border-t-0 lg:pl-6 lg:pt-0">
+          <h2 className="text-sm font-semibold">原始来源</h2>
+          <p className="mt-3 break-all font-mono text-xs text-zinc-500">arXiv:{paper.arxivId}</p>
+          <p className="mt-2 text-xs leading-6 text-zinc-500">首次预印本：{paper.year}<br />目录校订：{paperCatalogReviewedAt}</p>
+          <div className="mt-5 grid gap-4 text-sm">
+            <a href={paperUrl(paper)} target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 text-[#7a1731]"><ExternalLink className="h-4 w-4 shrink-0" />论文原文与版本记录</a>
+            <a href={paperPdfUrl(paper)} target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 text-zinc-600"><FileText className="h-4 w-4 shrink-0" />阅读 PDF</a>
+            {paper.resource ? <a href={paper.resource.url} target="_blank" rel="noreferrer" className="inline-flex items-start gap-2 leading-6 text-zinc-600"><ExternalLink className="mt-1 h-4 w-4 shrink-0" />{paper.resource.label}</a> : <p className="text-xs leading-6 text-zinc-500">尚未收录经核对的代码入口；这不代表作者未发布代码。</p>}
+          </div>
+          <div className="mt-7 border-t border-zinc-200 pt-6"><h2 className="text-sm font-semibold">社区状态：待认领</h2><p className="mt-3 text-sm leading-7 text-zinc-500">暂无负责人或已验证实验。先查看现有讨论，再提交你的范围、资源与时间计划。</p><a href={existingIssues} target="_blank" rel="noreferrer" className="mt-4 inline-flex items-center gap-2 text-sm text-zinc-600">查看相关 Issue<ExternalLink className="h-3.5 w-3.5" /></a><a href={paperProposalUrl(paper)} target="_blank" rel="noreferrer" className="mt-5 flex items-center justify-center gap-2 rounded-md bg-[#7a1731] px-4 py-3 text-sm font-medium text-white"><GitPullRequest className="h-4 w-4 shrink-0" />提交复现计划</a><p className="mt-3 text-xs leading-6 text-zinc-500">将打开 GitHub 预填表单，提交前可修改；不会自动认领或创建实验记录。</p></div>
+        </aside>
+      </div>
     </main>
   );
-}
-
-function InfoCard({ label, value }: { label: string; value: string }) {
-  return (
-    <div className="rounded-lg border border-zinc-200 bg-white p-5 shadow-sm">
-      <p className="text-sm text-zinc-500">{label}</p>
-      <p className="mt-2 font-semibold text-zinc-950">{value || "待补充"}</p>
-    </div>
-  );
-}
-
-function MetricPanel({
-  title,
-  metrics,
-  empty,
-}: {
-  title: string;
-  metrics: MetricEntry[];
-  empty: string;
-}) {
-  return (
-    <Card className="border-zinc-200 bg-white text-zinc-950 shadow-sm">
-      <CardHeader>
-        <CardTitle className="flex items-center gap-2">
-          <LineChart className="h-5 w-5 text-[#7a1731]" />
-          {title}
-        </CardTitle>
-      </CardHeader>
-      <CardContent>
-        {metrics.length > 0 ? (
-          <div className="grid gap-3 sm:grid-cols-2">
-            {metrics.map((metric) => (
-              <div key={metric.label} className="rounded-lg border border-zinc-200 bg-[#fbfbfd] p-4">
-                <p className="text-xs text-zinc-500">{metric.label}</p>
-                <p className="mt-2 text-2xl font-semibold text-zinc-950">{metric.value}</p>
-              </div>
-            ))}
-          </div>
-        ) : (
-          <div className="rounded-lg border border-dashed border-zinc-300 bg-[#fbfbfd] p-6 text-center text-sm text-zinc-600">
-            {empty}
-          </div>
-        )}
-      </CardContent>
-    </Card>
-  );
-}
-
-function formatStatus(status: string) {
-  const labels: Record<string, string> = {
-    running: "实验中",
-    review: "待审阅",
-    published: "已发布",
-    draft: "草稿",
-    matched: "已对齐",
-    improved: "已超越",
-  };
-
-  return labels[status] ?? status;
 }
