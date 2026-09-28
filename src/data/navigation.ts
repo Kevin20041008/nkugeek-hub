@@ -1,6 +1,6 @@
 export const navigationItems = [
   {
-    label: "学习路线",
+    label: "Geek Lab",
     href: "/learn",
   },
   {

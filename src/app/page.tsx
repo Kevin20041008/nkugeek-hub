@@ -2,10 +2,8 @@ import Image from "next/image";
 import Link from "next/link";
 import {
   ArrowRight,
-  BookOpen,
   CheckCircle2,
   ExternalLink,
-  FileArchive,
   GitBranch,
   GitPullRequest,
   ListChecks,
@@ -13,11 +11,11 @@ import {
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { contributionSteps, learningPaths, openChallenges } from "@/data/open-source";
+import { contributionSteps, openChallenges } from "@/data/open-source";
 import { getProjectCards } from "@/services/projects";
+import { coursePath, labLessons } from "@/data/geek-lab";
 
-const pathIcons = [GitBranch, BookOpen, FileArchive];
+
 const basePath = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
 
 export default async function HomePage() {
@@ -44,7 +42,7 @@ export default async function HomePage() {
             <div className="mt-8 flex flex-wrap gap-3">
               <Button size="lg" className="h-11 bg-[#7a1731] px-5 text-white hover:bg-[#641228]" asChild>
                 <Link href="/learn">
-                  开始第一条路线
+                  进入 Geek Lab
                   <ArrowRight className="ml-2 h-4 w-4" />
                 </Link>
               </Button>
@@ -70,7 +68,7 @@ export default async function HomePage() {
             <div className="absolute bottom-4 left-[35px] top-4 w-px bg-zinc-200 lg:left-[67px]" />
             <div className="space-y-6">
               {[
-                ["01", "选择路线", "从开源基础、AI 复现或智能硬件开始"],
+                ["01", "选择路线", "从 Python 工程实践开始"],
                 ["02", "运行项目", "按文档完成环境、代码和测试"],
                 ["03", "认领 Issue", "选择边界清晰、可以验证的开放任务"],
                 ["04", "提交 PR", "让代码、实验和文档成为公开贡献"],
@@ -97,7 +95,7 @@ export default async function HomePage() {
       <section className="border-b border-zinc-200 bg-[#f6f7fb]">
         <div className="mx-auto grid max-w-7xl grid-cols-2 gap-px bg-zinc-200 lg:grid-cols-4">
           {[
-            ["3", "首批开放路线"],
+            ["1", "完整实验课程"],
             ["4", "开放挑战类型"],
             ["0", "站内登录门槛"],
             ["1", "完整贡献闭环"],
@@ -111,43 +109,20 @@ export default async function HomePage() {
       </section>
 
       <section className="bg-white">
-        <div className="mx-auto max-w-7xl px-5 py-16 lg:px-8">
-          <SectionHeader
-            eyebrow="START HERE"
-            title="选择一条可完成的学习路线"
-            description="每条路线都包含环境、章节任务、验证方法和最终产出。学习不是浏览收藏，而是逐步做出可以公开复现的成果。"
-          />
-          <div className="mt-10 grid gap-5 lg:grid-cols-3">
-            {learningPaths.map((path, index) => {
-              const Icon = pathIcons[index];
-              return (
-                <Card key={path.slug} className="border-zinc-200 bg-white shadow-sm">
-                  <CardHeader>
-                    <div className="flex items-start justify-between gap-4">
-                      <div className="flex h-11 w-11 items-center justify-center rounded-lg bg-[#f2efe8] text-[#7a1731]">
-                        <Icon className="h-5 w-5" />
-                      </div>
-                      <Badge variant="outline" className="border-zinc-300 font-mono text-zinc-600">{path.code}</Badge>
-                    </div>
-                    <CardTitle className="pt-4 text-xl">{path.title}</CardTitle>
-                    <CardDescription className="leading-7 text-zinc-600">{path.description}</CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="flex flex-wrap gap-2">
-                      <Badge variant="secondary" className="bg-[#eef7f4] text-[#245f51]">{path.level}</Badge>
-                      <Badge variant="secondary" className="bg-zinc-100 text-zinc-700">{path.duration}</Badge>
-                    </div>
-                    <p className="mt-5 text-sm leading-6 text-zinc-600">最终产出：{path.outcome}</p>
-                    <Button variant="ghost" className="mt-5 w-full justify-between hover:bg-[#fff6f0] hover:text-[#7a1731]" asChild>
-                      <Link href={`/learn#${path.slug}`}>
-                        查看章节
-                        <ArrowRight className="h-4 w-4" />
-                      </Link>
-                    </Button>
-                  </CardContent>
-                </Card>
-              );
-            })}
+        <div className="mx-auto max-w-7xl px-5 py-12 lg:px-8">
+          <SectionHeader eyebrow="GEEK LAB" title="Python 工程实践" description="首门完整实验课程：用四个实验，把学习记录 CSV 做成可测试的命令行分析器。" />
+          <div className="mt-7 flex flex-wrap items-center gap-4">
+            <span className="text-sm text-[#28705b]">4 个实验 · 24 个测试 · 完整源码</span>
+            <Button asChild><Link href={coursePath}>进入实验室<ArrowRight className="h-4 w-4" /></Link></Button>
+          </div>
+          <div className="mt-7 divide-y divide-zinc-200 border-y border-zinc-200">
+            {labLessons.map((lesson) => (
+              <Link key={lesson.slug} href={coursePath + "/" + lesson.slug} className="flex items-center gap-4 py-5 hover:text-[#7a1731]">
+                <span className="font-mono text-sm text-[#7a1731]">{lesson.number}</span>
+                <span className="min-w-0 flex-1"><span className="block font-medium">{lesson.title}</span><span className="mt-1 block text-sm leading-6 text-zinc-500">{lesson.description}</span></span>
+                <ArrowRight className="h-4 w-4 shrink-0" />
+              </Link>
+            ))}
           </div>
         </div>
       </section>

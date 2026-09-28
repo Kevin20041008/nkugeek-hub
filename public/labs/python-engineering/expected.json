@@ -1,0 +1,9 @@
+{
+  "session_count": 4,
+  "total_minutes": 150,
+  "projects": {
+    "git": 30,
+    "python": 90,
+    "web": 30
+  }
+}

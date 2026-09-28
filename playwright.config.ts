@@ -7,6 +7,7 @@ export default defineConfig({
   timeout: 30_000,
   use: {
     baseURL: "http://127.0.0.1:3000",
+    channel: process.env.PLAYWRIGHT_CHANNEL,
   },
   webServer: {
     command: `${npmCommand} run dev -- -p 3000`,

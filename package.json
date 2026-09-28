@@ -3,11 +3,14 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
+    "predev": "node scripts/package-lab.mjs",
     "dev": "next dev",
+    "prebuild": "node scripts/package-lab.mjs",
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "test:smoke": "playwright test"
+    "test:smoke": "playwright test",
+    "test:lab": "python -m unittest discover -s public/labs/python-engineering -p \"test_*.py\" -v"
   },
   "dependencies": {
     "class-variance-authority": "^0.7.1",
@@ -29,6 +32,7 @@
     "@types/react-dom": "^19",
     "eslint": "^9",
     "eslint-config-next": "16.2.11",
+    "fflate": "^0.8.3",
     "tailwindcss": "^4",
     "typescript": "^5"
   }

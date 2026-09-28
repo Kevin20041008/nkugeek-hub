@@ -1,88 +1,63 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { ArrowRight, CheckCircle2, Clock3, Route, Terminal } from "lucide-react";
-
-import { PageHero } from "@/components/layout/page-hero";
-import { Badge } from "@/components/ui/badge";
+import { ArrowRight, BookOpen, Clock3, Download, FlaskConical } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { learningPaths } from "@/data/open-source";
+import { CourseProgress } from "@/components/lab/lab-progress";
+import { coursePath, labLessons, plannedCourses } from "@/data/geek-lab";
+import { CodeBlock } from "@/components/lab/code-block";
+import { readLabFiles } from "@/lib/lab-files";
 
-export const metadata: Metadata = { title: "学习路线" };
-
-export default function LearnPage() {
+export const metadata: Metadata = { title: "Geek Lab · 项目实验室", description: "从学习路线到可运行的实验课程。完成 Python 工程实践，运行代码、验证测试并提交真实贡献。" };
+const basePath = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
+export default async function LearnPage() {
+  const [sample, report] = await readLabFiles(["sessions.csv", "expected.json"]);
   return (
-    <main>
-      <PageHero
-        eyebrow="LEARNING PATHS"
-        title="沿着代码和任务学习，而不是只收藏资料"
-        description="每条路线由若干可运行、可测试、可提交的章节组成。你可以从零开始，也可以直接进入与当前能力匹配的阶段。"
-        actions={
-          <Button className="bg-[#7a1731] text-white hover:bg-[#641228]" asChild>
-            <Link href="#open-source-foundation">从 PATH 00 开始</Link>
-          </Button>
-        }
-      />
-
-      <section className="mx-auto max-w-7xl px-5 py-12 lg:px-8">
-        <div className="mb-12 grid gap-4 border-y border-zinc-200 py-6 sm:grid-cols-3">
-          {["章节有明确输入与产出", "代码与文档保持同一仓库", "完成路线后进入开放任务"].map((item) => (
-            <div key={item} className="flex items-center gap-3 text-sm text-zinc-700">
-              <CheckCircle2 className="h-4 w-4 shrink-0 text-[#2d7d69]" />
-              {item}
-            </div>
-          ))}
+    <main className="bg-white">
+      <section className="border-b border-zinc-200">
+        <div className="mx-auto max-w-7xl px-5 py-9 lg:px-8">
+          <p className="flex items-center gap-2 text-sm font-medium text-[#7a1731]"><FlaskConical className="h-4 w-4" />项目实验室</p>
+          <h1 className="mt-3 text-4xl font-semibold">Geek Lab</h1>
+          <p className="mt-3 max-w-2xl leading-7 text-zinc-600">从一份可运行的代码开始，完成实验、验证结果，再把改进贡献给社区。</p>
         </div>
-
-        <div className="grid gap-14">
-          {learningPaths.map((path) => (
-            <article key={path.slug} id={path.slug} className="scroll-mt-28">
-              <div className="grid gap-8 lg:grid-cols-[320px_1fr]">
-                <div>
-                  <Badge variant="outline" className="border-[#7a1731]/25 font-mono text-[#7a1731]">{path.code}</Badge>
-                  <h2 className="mt-4 text-2xl font-semibold text-zinc-950">{path.title}</h2>
-                  <p className="mt-3 leading-7 text-zinc-600">{path.description}</p>
-                  <div className="mt-5 flex flex-wrap gap-2">
-                    <Badge variant="secondary" className="bg-[#eef7f4] text-[#245f51]">{path.level}</Badge>
-                    <Badge variant="secondary" className="bg-zinc-100 text-zinc-700">
-                      <Clock3 className="mr-1.5 h-3.5 w-3.5" />{path.duration}
-                    </Badge>
-                  </div>
-                  <div className="mt-6 border-l-2 border-[#7a1731] pl-4">
-                    <p className="text-xs font-medium text-zinc-500">最终产出</p>
-                    <p className="mt-1 text-sm font-medium leading-6 text-zinc-900">{path.outcome}</p>
-                  </div>
-                </div>
-
-                <div className="overflow-hidden border border-zinc-200 bg-white">
-                  {path.stages.map((stage, index) => (
-                    <div key={stage.id} className={`grid gap-4 p-5 sm:grid-cols-[72px_1fr_1fr] ${index > 0 ? "border-t border-zinc-200" : ""}`}>
-                      <div className="flex items-start gap-2 font-mono text-sm text-[#7a1731]">
-                        <Route className="mt-0.5 h-4 w-4" />{stage.id}
-                      </div>
-                      <div>
-                        <p className="font-medium text-zinc-950">{stage.title}</p>
-                        <p className="mt-1 text-sm leading-6 text-zinc-600">{stage.task}</p>
-                      </div>
-                      <div className="text-sm text-zinc-600">
-                        <p className="text-xs font-medium text-zinc-500">OUTPUT</p>
-                        <p className="mt-1 leading-6">{stage.output}</p>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </article>
-          ))}
-        </div>
-
-        <div className="mt-14 flex flex-col justify-between gap-5 bg-zinc-950 p-7 text-white sm:flex-row sm:items-center">
+      </section>
+      <section id="open-source-foundation" className="mx-auto max-w-7xl scroll-mt-28 px-5 py-10 lg:px-8">
+        <div className="grid gap-10 lg:grid-cols-[1.2fr_1fr]">
           <div>
-            <p className="flex items-center gap-2 text-sm text-emerald-300"><Terminal className="h-4 w-4" />NEXT STEP</p>
-            <h2 className="mt-2 text-xl font-semibold">完成一个章节后，去认领真实任务</h2>
+            <div className="flex flex-wrap items-center gap-3 text-xs font-medium"><span className="text-[#28705b]">已开放 · 完整课程</span><span className="text-zinc-500">PYTHON / 01</span></div>
+            <h2 className="mt-4 text-3xl font-semibold">Python 工程实践</h2>
+            <p className="mt-4 max-w-xl leading-8 text-zinc-600">把学习记录 CSV 做成可测试的命令行分析器。四个递进实验，走完输入校验、文件处理、JSON 输出和开源贡献。</p>
+            <div className="mt-5 flex flex-wrap gap-5 text-sm text-zinc-600"><span className="flex items-center gap-2"><BookOpen className="h-4 w-4" />4 个实验</span><span className="flex items-center gap-2"><Clock3 className="h-4 w-4" />约 3–4 小时</span><span>24 个测试</span></div>
+            <p className="mt-4 text-sm text-zinc-500">前置：Python 变量、函数与字典 · Python 3.11+ · 无第三方依赖</p>
+            <div className="mt-7 flex flex-wrap gap-3">
+              <Button asChild className="h-10"><Link href={coursePath}>进入课程<ArrowRight className="h-4 w-4" /></Link></Button>
+              <Button asChild variant="outline" className="h-10"><a href={basePath + "/labs/python-engineering.zip"} download><Download className="h-4 w-4" />下载课程包</a></Button>
+            </div>
+            <div className="mt-8 max-w-sm"><CourseProgress /></div>
           </div>
-          <Button className="w-fit bg-white text-zinc-950 hover:bg-zinc-100" asChild>
-            <Link href="/challenges">进入开放挑战 <ArrowRight className="ml-2 h-4 w-4" /></Link>
-          </Button>
+          <div className="min-w-0">
+            <p className="mb-3 text-xs font-medium text-zinc-500">本课程的实际输入与输出 · 教学样例</p>
+            <CodeBlock label={sample.name} code={sample.content} />
+            <div className="py-2 text-center text-xs text-[#28705b]">校验 → 汇总 → JSON</div>
+            <CodeBlock label="report.json" code={report.content} />
+          </div>
+        </div>
+        <div className="mt-10 border-y border-zinc-200">
+          {labLessons.map((lesson) => (
+            <Link key={lesson.slug} href={coursePath + "/" + lesson.slug} className="grid items-center gap-3 border-b border-zinc-100 py-5 last:border-0 hover:bg-zinc-50 sm:grid-cols-[52px_1fr_auto]">
+              <span className="font-mono text-sm text-[#7a1731]">{lesson.number}</span>
+              <div><h3 className="font-medium">{lesson.title}</h3><p className="mt-1 text-sm leading-6 text-zinc-500">{lesson.description}</p></div>
+              <span className="flex items-center gap-3 text-sm text-zinc-500">{lesson.duration}<ArrowRight className="h-4 w-4" /></span>
+            </Link>
+          ))}
+        </div>
+      </section>
+      <section className="border-t border-zinc-200 bg-zinc-50">
+        <div className="mx-auto max-w-7xl px-5 py-10 lg:px-8">
+          <h2 className="text-xl font-semibold">筹备中的课程</h2>
+          <p className="mt-2 text-sm text-zinc-500">尚未开放实验。</p>
+          <div className="mt-6 grid gap-6 md:grid-cols-3">{plannedCourses.map((course) => (
+            <div key={course.title} className="border-t-2 border-zinc-300 pt-4"><p className="text-xs text-zinc-500">筹备中</p><h3 className="mt-2 font-semibold">{course.title}</h3><p className="mt-2 text-sm leading-7 text-zinc-600">{course.topic}</p><p className="mt-3 text-xs text-zinc-500">前置：{course.prerequisite}</p></div>
+          ))}</div>
         </div>
       </section>
     </main>

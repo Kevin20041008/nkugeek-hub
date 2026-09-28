@@ -6,7 +6,7 @@ NKUGeek Hub 采用“学习路线 -> 运行项目 -> 认领 Issue -> 提交 Pull
 
 ## 核心内容
 
-- 学习路线：章节化组织环境、代码、任务、验证与最终产出
+- Geek Lab：Python 工程实践，四个可运行实验、完整代码与 24 个测试
 - 开放项目：展示仓库、Issue、开发日志、版本和贡献方向
 - 开放挑战：按难度、预计投入和交付物拆分可认领任务
 - 论文复现：记录数据集、环境、指标、实验、问题和复现报告
@@ -45,7 +45,9 @@ npm run test:smoke
 ## 主要页面
 
 - `/` 开源学习社区首页
-- `/learn` 学习路线与章节任务
+- `/learn` Geek Lab 课程目录
+- `/learn/python-engineering` Python 工程实践
+- `/learn/python-engineering/[labId]` 实验讲解、代码、测试与 Issue
 - `/challenges` 开放挑战与任务模板
 - `/contribute` Issue、分支与 Pull Request 贡献流程
 - `/projects` 开放项目
@@ -68,4 +70,17 @@ npm run test:smoke
 - [页面设计说明](docs/design/README.md)
 - [部署说明](docs/deployment/github-vercel.md)
 
-第一次参与建议从 `/learn` 的 PATH 00 开始，然后选择一个 `good first issue`。
+第一次参与建议从 Geek Lab 的 Python 工程实践开始，再认领实验末尾的 Issue。
+
+## Geek Lab
+
+实验源码位于 `public/labs/python-engineering`，需要 Python 3.11+，无需第三方 Python 依赖。
+网页在构建时读取实际源码；`npm run dev` 和 `npm run build` 自动生成课程 ZIP。
+不要直接修改 ZIP，应修改源文件后重新构建。
+
+```bash
+npm run test:lab
+```
+
+持续集成会在 Windows / Linux、Python 3.11 / 3.14 上运行课程测试。
+课程作者维护 `src/data/geek-lab.ts` 中的教学内容，同时更新真实源码、测试和关联 Issue。

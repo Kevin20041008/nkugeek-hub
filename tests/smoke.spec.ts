@@ -2,7 +2,12 @@ import { expect, test } from "@playwright/test";
 
 const routes = [
   { path: "/", text: "NKUGeek Hub" },
-  { path: "/learn", text: "学习路线" },
+  { path: "/learn", text: "Geek Lab" },
+  { path: "/learn/python-engineering", text: "最终交付" },
+  { path: "/learn/python-engineering/data-validation", text: "数据建模与输入校验" },
+  { path: "/learn/python-engineering/csv-pipeline", text: "CSV 读取与数据汇总" },
+  { path: "/learn/python-engineering/command-line", text: "命令行工具与文件输出" },
+  { path: "/learn/python-engineering/regression-and-pr", text: "回归测试与第一次贡献" },
   { path: "/challenges", text: "开放挑战" },
   { path: "/contribute", text: "无需申请加入" },
   { path: "/projects", text: "开放项目" },

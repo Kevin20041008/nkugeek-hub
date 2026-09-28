@@ -42,3 +42,10 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# Geek Lab generated files
+__pycache__/
+*.py[cod]
+.venv/
+/public/labs/*.zip
+/public/labs/python-engineering/report.json
