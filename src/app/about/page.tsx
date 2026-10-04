@@ -3,7 +3,13 @@ import { BookOpen, GitBranch, Layers3, ShieldCheck, Users } from "lucide-react";
 
 import { PageHero } from "@/components/layout/page-hero";
 import { Badge } from "@/components/ui/badge";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { communityRoles } from "@/data/open-source";
 import { mvpFeatures, roadmap } from "@/data/platform";
 
@@ -28,34 +34,43 @@ export default function AboutPage() {
       <section className="mx-auto grid max-w-7xl gap-6 px-5 py-12 lg:grid-cols-2 lg:px-8">
         <Card className="border-zinc-200 bg-white text-zinc-950 shadow-sm">
           <CardHeader>
-            <CardTitle className="flex items-center gap-2"><Layers3 className="h-5 w-5 text-[#7a1731]" />第一阶段范围</CardTitle>
-            <CardDescription className="leading-7 text-zinc-600">先打通学习、运行、认领、提交和沉淀，不建设站内账户与审核系统。</CardDescription>
+            <CardTitle className="flex items-center gap-2">
+              <Layers3 className="h-5 w-5 text-[#7a1731]" />
+              第一阶段范围
+            </CardTitle>
+            <CardDescription className="leading-7 text-zinc-600">
+              先打通学习、运行、认领、提交和沉淀，不建设站内账户与审核系统。
+            </CardDescription>
           </CardHeader>
           <CardContent className="grid gap-2 sm:grid-cols-2">
-            {mvpFeatures.map((feature) => <div key={feature} className="border border-zinc-200 bg-[#fbfbfd] p-3 text-sm text-zinc-700">{feature}</div>)}
+            {mvpFeatures.map((feature) => (
+              <div
+                key={feature}
+                className="border border-zinc-200 bg-[#fbfbfd] p-3 text-sm text-zinc-700"
+              >
+                {feature}
+              </div>
+            ))}
           </CardContent>
         </Card>
 
         <Card className="border-zinc-200 bg-white text-zinc-950 shadow-sm">
           <CardHeader>
-            <CardTitle className="flex items-center gap-2"><GitBranch className="h-5 w-5 text-[#7a1731]" />开放技术架构</CardTitle>
-            <CardDescription className="leading-7 text-zinc-600">网站是仓库内容的公开入口，GitHub 是协作事实来源。</CardDescription>
+            <CardTitle className="flex items-center gap-2">
+              <GitBranch className="h-5 w-5 text-[#7a1731]" />
+              开放技术架构
+            </CardTitle>
+            <CardDescription className="leading-7 text-zinc-600">
+              网站是仓库内容的公开入口，GitHub 是协作事实来源。
+            </CardDescription>
           </CardHeader>
           <CardContent className="grid gap-3">
-            {architecture.map((item) => <div key={item} className="border-l-2 border-zinc-200 pl-3 text-sm leading-6 text-zinc-700">{item}</div>)}
-          </CardContent>
-        </Card>
-
-        <Card className="border-zinc-200 bg-white text-zinc-950 shadow-sm lg:col-span-2">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2"><Users className="h-5 w-5 text-[#7a1731]" />社区角色</CardTitle>
-            <CardDescription className="text-zinc-600">角色来自持续贡献与责任，而不是网站注册或积分。</CardDescription>
-          </CardHeader>
-          <CardContent className="grid gap-px bg-zinc-200 sm:grid-cols-2 lg:grid-cols-4">
-            {communityRoles.map((item) => (
-              <div key={item.role} className="bg-white p-5">
-                <Badge variant="outline" className="border-zinc-300 font-mono text-zinc-700">{item.role}</Badge>
-                <p className="mt-3 text-sm leading-6 text-zinc-600">{item.description}</p>
+            {architecture.map((item) => (
+              <div
+                key={item}
+                className="border-l-2 border-zinc-200 pl-3 text-sm leading-6 text-zinc-700"
+              >
+                {item}
               </div>
             ))}
           </CardContent>
@@ -63,14 +78,53 @@ export default function AboutPage() {
 
         <Card className="border-zinc-200 bg-white text-zinc-950 shadow-sm lg:col-span-2">
           <CardHeader>
-            <CardTitle className="flex items-center gap-2"><BookOpen className="h-5 w-5 text-[#7a1731]" />演进路线</CardTitle>
+            <CardTitle className="flex items-center gap-2">
+              <Users className="h-5 w-5 text-[#7a1731]" />
+              社区角色
+            </CardTitle>
+            <CardDescription className="text-zinc-600">
+              角色来自持续贡献与责任，而不是网站注册或积分。
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="grid gap-px bg-zinc-200 sm:grid-cols-2 lg:grid-cols-4">
+            {communityRoles.map((item) => (
+              <div key={item.role} className="bg-white p-5">
+                <Badge
+                  variant="outline"
+                  className="border-zinc-300 font-mono text-zinc-700"
+                >
+                  {item.role}
+                </Badge>
+                <p className="mt-3 text-sm leading-6 text-zinc-600">
+                  {item.description}
+                </p>
+              </div>
+            ))}
+          </CardContent>
+        </Card>
+
+        <Card className="border-zinc-200 bg-white text-zinc-950 shadow-sm lg:col-span-2">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <BookOpen className="h-5 w-5 text-[#7a1731]" />
+              演进路线
+            </CardTitle>
           </CardHeader>
           <CardContent className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
             {roadmap.map((phase) => (
-              <div key={phase.phase} className="border border-zinc-200 bg-[#fbfbfd] p-4">
-                <p className="text-sm font-medium text-[#7a1731]">{phase.phase}</p>
-                <p className="mt-2 font-semibold text-zinc-950">{phase.title}</p>
-                <p className="mt-3 text-sm leading-6 text-zinc-600">{phase.items.join("、")}</p>
+              <div
+                key={phase.title}
+                className="border border-zinc-200 bg-[#fbfbfd] p-4"
+              >
+                <p className="text-sm font-medium text-[#7a1731]">
+                  {phase.phase}
+                </p>
+                <p className="mt-2 font-semibold text-zinc-950">
+                  {phase.title}
+                </p>
+                <p className="mt-3 text-sm leading-6 text-zinc-600">
+                  {phase.items.join("、")}
+                </p>
               </div>
             ))}
           </CardContent>

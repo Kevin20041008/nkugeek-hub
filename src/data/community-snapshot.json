@@ -1,0 +1,64 @@
+{
+  "checkedAt": "2026-10-04T18:43:45.286Z",
+  "repository": "https://github.com/Kevin20041008/nkugeek-hub",
+  "issues": [
+    {
+      "number": 1,
+      "title": "[Geek Lab 01] 为输入校验补充边界测试",
+      "state": "open",
+      "url": "https://github.com/Kevin20041008/nkugeek-hub/issues/1",
+      "assignees": []
+    },
+    {
+      "number": 2,
+      "title": "[Geek Lab 02] 增加按日期汇总函数",
+      "state": "open",
+      "url": "https://github.com/Kevin20041008/nkugeek-hub/issues/2",
+      "assignees": []
+    },
+    {
+      "number": 3,
+      "title": "[Geek Lab 03] 为命令行增加项目筛选参数",
+      "state": "open",
+      "url": "https://github.com/Kevin20041008/nkugeek-hub/issues/3",
+      "assignees": []
+    },
+    {
+      "number": 4,
+      "title": "[Geek Lab 04] 补充命令行可移植性回归测试",
+      "state": "open",
+      "url": "https://github.com/Kevin20041008/nkugeek-hub/issues/4",
+      "assignees": []
+    }
+  ],
+  "activity": [
+    {
+      "id": "4690a455f3574a3c1cc0a78fe796ab2c1c46d2cd",
+      "title": "feat: curate 60 research papers with searchable reproduction plans",
+      "date": "2026-09-28T15:31:18Z",
+      "url": "https://github.com/Kevin20041008/nkugeek-hub/commit/4690a455f3574a3c1cc0a78fe796ab2c1c46d2cd",
+      "kind": "Commit"
+    },
+    {
+      "id": "abe7c4ccc1840a0c8f05ba50b9b82ec5b71e4e7d",
+      "title": "feat: add complete Python engineering Geek Lab course",
+      "date": "2026-09-28T04:38:52Z",
+      "url": "https://github.com/Kevin20041008/nkugeek-hub/commit/abe7c4ccc1840a0c8f05ba50b9b82ec5b71e4e7d",
+      "kind": "Commit"
+    },
+    {
+      "id": "31f58c1ad47c0d83cd1a826d274d0016818fa3b3",
+      "title": "feat: publish NKUGeek Hub open community on GitHub Pages",
+      "date": "2026-09-27T17:07:06Z",
+      "url": "https://github.com/Kevin20041008/nkugeek-hub/commit/31f58c1ad47c0d83cd1a826d274d0016818fa3b3",
+      "kind": "Commit"
+    },
+    {
+      "id": "230d17ce0e667d73295101d158f84d1381e01e2c",
+      "title": "Initial commit from Create Next App",
+      "date": "2026-07-25T16:49:28Z",
+      "url": "https://github.com/Kevin20041008/nkugeek-hub/commit/230d17ce0e667d73295101d158f84d1381e01e2c",
+      "kind": "Commit"
+    }
+  ]
+}

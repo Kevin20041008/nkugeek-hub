@@ -1,5 +1,3 @@
-import { articles } from "@/data/platform";
-
 export interface ArticleCard {
   title: string;
   slug?: string;
@@ -13,5 +11,5 @@ export interface ArticleCard {
 }
 
 export async function getArticleCards(): Promise<ArticleCard[]> {
-  return articles;
+  return [];
 }

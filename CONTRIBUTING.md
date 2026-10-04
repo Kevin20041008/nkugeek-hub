@@ -4,7 +4,7 @@
 
 ## 从哪里开始
 
-1. 阅读网站 `/learn` 中的 PATH 00。
+1. 从网站 `/learn` 的 Python 工程实践或 `/learn/foundations#git` 开始。
 2. 在本地运行项目并通过基础检查。
 3. 在带有 `good first issue` 或 `help wanted` 标签的任务下留言认领。
 4. 与维护者确认范围后开始实现。

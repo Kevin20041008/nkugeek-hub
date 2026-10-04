@@ -6,6 +6,10 @@ NKUGeek Hub 采用“学习路线 -> 运行项目 -> 认领 Issue -> 提交 Pull
 
 ## 核心内容
 
+主导航为 Learn / Build / Research / Community / Showcase。
+首页不显示未经核验的规模数字，动态附 GitHub 来源与快照时间。
+项目、任务、论文、课程与成果互相连接，所有写入通过 Issue / PR 完成。
+
 - Geek Lab：Python 工程实践，四个可运行实验、完整代码与 24 个测试
 - 开放项目：展示仓库、Issue、开发日志、版本和贡献方向
 - 开放挑战：按难度、预计投入和交付物拆分可认领任务
@@ -46,6 +50,12 @@ npm run test:smoke
 
 - `/` 开源学习社区首页
 - `/learn` Geek Lab 课程目录
+- `/learn/foundations` Git、Web、PyTorch、ViT 与 Paper 官方资源导学及产出验收
+- `/tasks` 六类任务的统一入口，区分真实 Issue 与待讨论提案
+- `/showcase` Made at NKU 真实作品与外部公开项目收录
+- `/contributors` 无排名的贡献者档案
+- `/failures` 带代码依据的排错档案
+- `/events/archive` 活动材料、参与者授权署名与成果归档
 - `/learn/python-engineering` Python 工程实践
 - `/learn/python-engineering/[labId]` 实验讲解、代码、测试与 Issue
 - `/challenges` 开放挑战与任务模板
@@ -66,6 +76,9 @@ npm run test:smoke
 
 - [贡献指南](CONTRIBUTING.md)
 - [行为准则](CODE_OF_CONDUCT.md)
+- [社区规范](COMMUNITY_GUIDELINES.md)
+- [项目收录规范](docs/product/project-admission.md)
+- [社区数据与快照维护](docs/api/community-data.md)
 - [安全策略](SECURITY.md)
 - [产品路线](docs/product/roadmap.md)
 - [页面设计说明](docs/design/README.md)

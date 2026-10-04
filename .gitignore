@@ -49,3 +49,4 @@ __pycache__/
 .venv/
 /public/labs/*.zip
 /public/labs/python-engineering/report.json
+/src/data/community-snapshot.json.tmp

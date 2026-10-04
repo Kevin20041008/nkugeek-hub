@@ -10,6 +10,7 @@
     "start": "next start",
     "lint": "eslint",
     "test:smoke": "playwright test",
+    "sync:community": "node scripts/sync-community.mjs",
     "test:lab": "python -m unittest discover -s public/labs/python-engineering -p \"test_*.py\" -v"
   },
   "dependencies": {

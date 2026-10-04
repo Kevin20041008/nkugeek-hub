@@ -20,7 +20,17 @@ The website is a public entry point. GitHub repositories are the source of truth
 
 The first release does not require website accounts, project applications, article moderation, or an admin dashboard.
 
-## Phases
+## Current Status (2026-10-05)
+
+- Available: Python engineering labs, sourced paper catalog, unified task hub,
+  project incubator, linked learning guides, sourced showcases and community activity.
+- Real open Issues: Geek Lab #1-4, with dated GitHub status snapshots.
+- Proposed: research sprint, additional task categories and unowned project ideas.
+- No verified community reproduction reports or event archives yet.
+- Next milestone: complete and review the first Geek Lab extension contributions;
+  confirm one research protocol before launching a sprint.
+
+## Longer-Term Phases
 
 1. Open entry: learning paths, open projects, task templates, contribution guide.
 2. Practice loop: chapter exercises, Issue claiming, automated tests, Pull Requests.

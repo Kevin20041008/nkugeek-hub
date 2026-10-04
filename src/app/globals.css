@@ -97,3 +97,45 @@
     @apply bg-background text-foreground;
   }
 }
+
+@layer components {
+  .hub-container {
+    @apply mx-auto w-full max-w-7xl px-5 lg:px-8;
+  }
+  .hub-section {
+    @apply border-b border-zinc-200 py-9;
+  }
+  .hub-link {
+    @apply inline-flex items-center gap-2 font-medium text-[#7a1731] hover:underline underline-offset-4;
+  }
+  .hub-button {
+    @apply inline-flex min-h-10 items-center justify-center gap-2 rounded-md border border-zinc-300 bg-white px-4 py-2 text-sm font-medium text-zinc-800 hover:bg-zinc-50;
+  }
+  .hub-primary {
+    @apply border-[#7a1731] bg-[#7a1731] text-white hover:bg-[#641228];
+  }
+  .hub-icon {
+    @apply inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-md text-zinc-600 hover:bg-zinc-100;
+  }
+  .hub-card {
+    @apply flex min-w-0 flex-col rounded-lg border border-zinc-200 bg-white p-5;
+  }
+  .hub-select {
+    @apply mt-2 h-10 w-full min-w-0 rounded-md border border-zinc-300 bg-white px-3 text-sm;
+  }
+}
+
+@layer base {
+  :focus-visible {
+    outline: 2px solid #28705b;
+    outline-offset: 3px;
+  }
+  button,
+  summary,
+  select {
+    cursor: pointer;
+  }
+  main {
+    overflow-wrap: anywhere;
+  }
+}
